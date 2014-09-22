@@ -7,8 +7,8 @@
     <body>
         <?php
         //Variable que contiene el html de la pagina
-        $text_html = file_get_contents('https://portal.ingenieria.usac.edu.gt/index.php/estudiante/horarios/segundo-semestre/horariocursos');
-        //$text_html = file_get_contents("Files/HorarioCursos2S2014.htm");
+        //$text_html = file_get_contents('https://portal.ingenieria.usac.edu.gt/index.php/estudiante/horarios/segundo-semestre/horariocursos');
+        $text_html = file_get_contents("Files/HorarioCursos2S2014.htm");
         //Contadores, uno global, y otro para verificar los inserts
         $conteoGlobal = $conteoInsert = 0;
         //Variables necesarias para crear los INSERT
@@ -25,7 +25,7 @@
         //Lectura del archivo hasta un EOF
         while (!feof($html)) {
             $cadena = fgets($html); //Lectura linea por linea
-
+            
             htmlspecialchars_decode($cadena); //decodificar caracteres especiales de html
             trim($cadena);  //trim a las cadenas
             //Delimitadores

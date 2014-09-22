@@ -16,13 +16,13 @@ function getCurso(id) {
 }
 
 //Agregar Cursos prueba
-for (i = 1; i <= 5; i++) {
+/*for (i = 1; i <= 5; i++) {
     addCurso("07" + i, "Curso" + i, "A", "T3", "105", 700, 800, false, true, false, true, false, false, false);
 }
 addCurso("076", "Curso6", "A", "T3", "105", 630, 730, false, true, false, true, false, false, false);
 addCurso("077", "Curso7", "A", "T3", "105", 800, 900, false, true, false, true, false, false, false);
 addCurso("078", "Curso8", "A", "T3", "105", 730, 800, true, false, false, false, false, false, false);
-addCurso("079", "Curso9", "A", "T3", "105", 700, 800, false, false, true, false, true, false, false);
+addCurso("079", "Curso9", "A", "T3", "105", 700, 800, false, false, true, false, true, false, false);*/
 
 //Al estar listo el documento
 $(document).ready(function() {
@@ -90,7 +90,13 @@ $(document).ready(function() {
         resizable: false,
         height: "auto",
         width: "auto",
-        dialogClass: "pr"
+        dialogClass: "pr",
+        buttons: [{
+                text: "Descargar",
+                click: function() {
+                    //graficar(50);
+                    //$("#msgHorario").dialog("open");                    
+                }}]
     }).dialogExtend({
         closable: true,
         titlebar: "none",

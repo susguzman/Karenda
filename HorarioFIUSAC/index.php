@@ -34,7 +34,7 @@
                 border-style: none;
                 background: gray;
             }
-          
+
             .pr{
                 position: fixed;
                 opacity: 1;
@@ -44,7 +44,7 @@
                 margin: auto;
                 background: white;
             }
-            
+
             .ui-dialog{
                 padding: 0px;                    
             }
@@ -74,11 +74,37 @@
                 margin: 5px 0px 0px 50px;
             }
         </style>
+        <?php
+        $con = mysqli_connect("localhost", "jguzman", "falcon20", "horario");
+
+        // Check connection
+        if (mysqli_connect_errno()) {
+            die("Failed to connect to MySQL" . mysqli_connect_error());
+        }
+
+        function toBool($dato) {
+            if ($dato == "1") {
+                return "true";
+            } else {
+                return "false";
+            }
+        }
+
+        $result = mysqli_query($con, "SELECT * FROM curso");
+
+        echo "<script type=\"text/javascript\">\n";
+        while ($row = mysqli_fetch_array($result)) {
+            echo "addCurso(\"" . $row['cod'] . "\", \"" . $row['nombre'] . "\", \"" . $row['seccion'] . "\", \"" . $row['edificio'] . "\", \"" . $row['salon'] . "\", " . $row['inicio'] . ", " . $row['final'] . ", " . toBool($row['lu']) . ", " . toBool($row['ma']) . ", " . toBool($row['mi']) . ", " . toBool($row['ju']) . ", " . toBool($row['vi']) . ", " . toBool($row['sa']) . ", " . toBool($row['dom']) . ");\n";
+        }
+        echo "</script>\n";
+
+        mysqli_close($con);
+        ?>
     </head>
     <body>
         <div class="conteiner">
             <div class="header">
-                <div class="left"><a href="index.html"><img src="images/logo2.png" alt="logo" class="logo"></a></div>
+                <div class="left"><a href="index.php.html"><img src="images/logo2.png" alt="logo" class="logo"></a></div>
                 <div class="right">
                     <div class="caja-redes">
                         <a href="#" class="icon-button twitter"><i class="fa fa-twitter"></i><span></span></a>
@@ -137,7 +163,7 @@
                 <div id="mensaje">
                     <p style="margin: 10px 0px;"><i id = "msg_texto"></i></p>
                 </div>
-                
+
                 <div id="msgHorario">
                     <div id = "canvasHorario"></div>
                 </div>

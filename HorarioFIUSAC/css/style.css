@@ -265,7 +265,7 @@ table {
 }
 
 table td {
-    padding:10px;
+    padding:5px 10px;
     font-size: 0.8em;
     border-style: dotted;
     border-width: 0.1em;

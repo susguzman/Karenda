@@ -73,6 +73,10 @@
             #horario ol{
                 margin: 5px 0px 0px 50px;
             }
+            
+            #lista_def img, #lista_pos img{
+                margin: 0px 0px 0px 10px;
+            }
         </style>
         <?php
         $con = mysqli_connect("localhost", "jguzman", "falcon20", "horario");

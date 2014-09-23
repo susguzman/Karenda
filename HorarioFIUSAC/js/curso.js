@@ -86,18 +86,14 @@ ListaHorario.prototype.delCursoHorario = function(idCurso) {
     }
     
     if(aux === this.primero && aux === this.ultimo){
-        console.log("0");
         this.primero = this.ultimo = undefined;
     }else if(aux === this.primero){
-        console.log("1");
         this.primero = this.primero.sig;
         this.primero.ant = undefined;
     }else if(aux === this.ultimo){
-        console.log("2");
         this.ultimo = this.ultimo.ant;
         this.ultimo.sig = undefined;
     }else if(aux !== undefined){
-        console.log("3");
         aux.sig.ant = aux.ant;
         aux.ant.sig = aux.sig;
     }

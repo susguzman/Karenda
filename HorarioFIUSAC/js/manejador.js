@@ -57,10 +57,6 @@ $(document).ready(function () {
         }
     }
 
-    function myJsFunc() {
-        console.log("XDjajaja");
-    }
-
     //Ventana Horario
     $("#horario").dialog({
         autoOpen: true,
@@ -138,15 +134,15 @@ $(document).ready(function () {
         switch (ltsHorario.addCursoHorario([curso, true])) {
             case 0:
                 $("#lista_def").find(".placeholder").remove();
-                var del = $("<a></a>").text("enlace").click(
+                var del = $("<a></a>").click(
                     function (event) {
                         var idCurso = parseInt($(this).parent().attr("id").replace("lc",""));
-                        ltsHorario.delCursoHorario(idCurso);
-                        console.log($(this).parent().attr("id").replace("lc",""));                            
+                        ltsHorario.delCursoHorario(idCurso);                        
                         $(this).parent().remove();
                     }).attr("href", "#");
-                        
-                del.appendTo($("<li></li>").text(curso.name).attr("id", "lc" + curso.id).appendTo($("#lista_def")));
+                
+                $("<img>").attr("src", "images/delete.png").attr("width", "13").attr("height", "13").appendTo(del);
+                del.appendTo($("<li></li>").text(curso.name + " ").attr("id", "lc" + curso.id).appendTo($("#lista_def")));
 
                 console.log("Curso Agregado.");
                 break;

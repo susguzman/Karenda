@@ -19,10 +19,6 @@ function Curso(id, cod, name, seccion, edificio, salon, inicio, fin, lu, ma, mi,
     this.dom = dom;
 }
 
-Curso.prototype.hola = function() {
-    console.log("hola");
-};
-
 //Lista
 function nLista() {
     this.dato = this.ant = this.sig = undefined;
@@ -58,6 +54,8 @@ function ltshOrdenado() {
 ltshOrdenado.prototype = Object.create(Lista.prototype);
 ltshOrdenado.prototype.constructor = ltshOrdenado;
 
+/************* Funciones de Objetos creados **************/
+
 ListaHorario.prototype.addCursoHorario = function(dato) {
     if (this.find(dato[0].id) === undefined) { //Existe curso
         if (dato[1] === true) { //Definitivo
@@ -73,6 +71,35 @@ ListaHorario.prototype.addCursoHorario = function(dato) {
         }
     } else {
         return 1;
+    }
+};
+
+ListaHorario.prototype.delCursoHorario = function(idCurso) {    
+    var aux = this.primero;
+
+    while (aux !== undefined) {
+        var curso = aux.dato[0];
+        if (curso.id === idCurso) {
+            break;
+        }
+        aux = aux.sig;
+    }
+    
+    if(aux === this.primero && aux === this.ultimo){
+        console.log("0");
+        this.primero = this.ultimo = undefined;
+    }else if(aux === this.primero){
+        console.log("1");
+        this.primero = this.primero.sig;
+        this.primero.ant = undefined;
+    }else if(aux === this.ultimo){
+        console.log("2");
+        this.ultimo = this.ultimo.ant;
+        this.ultimo.sig = undefined;
+    }else if(aux !== undefined){
+        console.log("3");
+        aux.sig.ant = aux.ant;
+        aux.ant.sig = aux.sig;
     }
 };
 

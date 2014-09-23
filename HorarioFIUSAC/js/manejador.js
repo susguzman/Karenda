@@ -17,15 +17,15 @@ function getCurso(id) {
 
 //Agregar Cursos prueba
 /*for (i = 1; i <= 5; i++) {
-    addCurso("07" + i, "Curso" + i, "A", "T3", "105", 700, 800, false, true, false, true, false, false, false);
-}
-addCurso("076", "Curso6", "A", "T3", "105", 630, 730, false, true, false, true, false, false, false);
-addCurso("077", "Curso7", "A", "T3", "105", 800, 900, false, true, false, true, false, false, false);
-addCurso("078", "Curso8", "A", "T3", "105", 730, 800, true, false, false, false, false, false, false);
-addCurso("079", "Curso9", "A", "T3", "105", 700, 800, false, false, true, false, true, false, false);*/
+ addCurso("07" + i, "Curso" + i, "A", "T3", "105", 700, 800, false, true, false, true, false, false, false);
+ }
+ addCurso("076", "Curso6", "A", "T3", "105", 630, 730, false, true, false, true, false, false, false);
+ addCurso("077", "Curso7", "A", "T3", "105", 800, 900, false, true, false, true, false, false, false);
+ addCurso("078", "Curso8", "A", "T3", "105", 730, 800, true, false, false, false, false, false, false);
+ addCurso("079", "Curso9", "A", "T3", "105", 700, 800, false, false, true, false, true, false, false);*/
 
 //Al estar listo el documento
-$(document).ready(function() {
+$(document).ready(function () {
 
     //Agregando Cursos a Tabla Lista
     for (i = 0; i < arrCursos.length; i++) {
@@ -57,6 +57,10 @@ $(document).ready(function() {
         }
     }
 
+    function myJsFunc() {
+        console.log("XDjajaja");
+    }
+
     //Ventana Horario
     $("#horario").dialog({
         autoOpen: true,
@@ -69,9 +73,9 @@ $(document).ready(function() {
         dialogClass: "mi_horario",
         buttons: [{
                 text: "Ver",
-                click: function() {
+                click: function () {
                     graficar(50);
-                    $("#msgHorario").dialog("open");                    
+                    $("#msgHorario").dialog("open");
                 }}]
     }).dialogExtend({
         closable: false,
@@ -93,9 +97,8 @@ $(document).ready(function() {
         dialogClass: "pr",
         buttons: [{
                 text: "Descargar",
-                click: function() {
-                    //graficar(50);
-                    //$("#msgHorario").dialog("open");                    
+                click: function () {
+                    window.open($(".kineticjs-content canvas")[0].toDataURL());
                 }}]
     }).dialogExtend({
         closable: true,
@@ -135,11 +138,20 @@ $(document).ready(function() {
         switch (ltsHorario.addCursoHorario([curso, true])) {
             case 0:
                 $("#lista_def").find(".placeholder").remove();
-                $("<li></li>").text(curso.name).appendTo($("#lista_def"));
+                var del = $("<a></a>").text("enlace").click(
+                    function (event) {
+                        var idCurso = parseInt($(this).parent().attr("id").replace("lc",""));
+                        ltsHorario.delCursoHorario(idCurso);
+                        console.log($(this).parent().attr("id").replace("lc",""));                            
+                        $(this).parent().remove();
+                    }).attr("href", "#");
+                        
+                del.appendTo($("<li></li>").text(curso.name).attr("id", "lc" + curso.id).appendTo($("#lista_def")));
+
                 console.log("Curso Agregado.");
                 break;
             case 1:
-                showMsg(true, "Error ...", "Curso ya agregado.", [{text: "Ok", click: function() {
+                showMsg(true, "Error ...", "Curso ya agregado.", [{text: "Ok", click: function () {
                             $(this).dialog("close");
                         }}]);
                 console.log("Ya se ha agregado el curso.");
@@ -148,13 +160,13 @@ $(document).ready(function() {
                 showMsg(true, "Traslape ...", "Exite un traslape", [
                     {
                         text: "Ok",
-                        click: function() {
+                        click: function () {
                             $(this).dialog("close");
                         }
                     },
                     {
                         text: "como Posible",
-                        click: function() {
+                        click: function () {
                             $(this).dialog("close");
                             addPosible(curso);
                         }
@@ -162,7 +174,7 @@ $(document).ready(function() {
                 console.log("Existe traslape de curso.");
                 break;
             default:
-                showMsg(true, "Error ...", "No se pudo agregar.", [{text: "Ok", click: function() {
+                showMsg(true, "Error ...", "No se pudo agregar.", [{text: "Ok", click: function () {
                             $(this).dialog("close");
                         }}]);
                 console.log("Error al agregar.");
@@ -181,7 +193,7 @@ $(document).ready(function() {
         activeClass: "ui-state-default",
         hoverClass: "ui-state-hover",
         accept: ":not(.ui-sortable-helper)",
-        drop: function(event, ui) {
+        drop: function (event, ui) {
             selCurso = getCurso(ui.draggable.attr("id"));
 
             if (selCurso !== undefined) {
@@ -190,14 +202,14 @@ $(document).ready(function() {
                         showMsg(true, "Agergar Curso ...", "Como desea agergar el curso?", [
                             {
                                 text: "Normal",
-                                click: function() {
+                                click: function () {
                                     $(this).dialog("close");
                                     addNormal(selCurso);
                                 }
                             },
                             {
                                 text: "Posible",
-                                click: function() {
+                                click: function () {
                                     $(this).dialog("close");
                                     addPosible(selCurso);
                                 }
@@ -206,12 +218,12 @@ $(document).ready(function() {
                         addNormal(selCurso);
                     }
                 } else {
-                    showMsg(true, "Error ...", "Curso ya agregado.", [{text: "Ok", click: function() {
+                    showMsg(true, "Error ...", "Curso ya agregado.", [{text: "Ok", click: function () {
                                 $(this).dialog("close");
                             }}]);
                 }
             } else {
-                showMsg(true, "Error ...", "No encontrado.", [{text: "Ok", click: function() {
+                showMsg(true, "Error ...", "No encontrado.", [{text: "Ok", click: function () {
                             $(this).dialog("close");
                         }}]);
             }
@@ -222,7 +234,7 @@ $(document).ready(function() {
         items: "li:not(.placeholder)",
         cursor: "move",
         opacity: 0.5,
-        sort: function(event, ui) {
+        sort: function (event, ui) {
             $(this).removeClass("ui-state-default");
         }
     });
@@ -231,7 +243,7 @@ $(document).ready(function() {
         items: "li:not(.placeholder)",
         cursor: "move",
         opacity: 0.5,
-        sort: function(event, ui) {
+        sort: function (event, ui) {
             $(this).removeClass("ui-state-default");
         }
     });

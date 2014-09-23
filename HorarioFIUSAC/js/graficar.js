@@ -139,7 +139,7 @@ function graficar(margen) {
                     var texto = new Kinetic.Text({
                         x: (colWidth * (k + 2)) - (colWidth / 2),
                         y: 40 + filWidth * i - (filWidth / 2),
-                        text: curso.name,
+                        text: curso.name.substr(0,5),
                         fontSize: 16,
                         fontFamily: 'Calibri',
                         strokeWidth: 5,

@@ -1,3 +1,7 @@
+/*
+ * Archivo que contiene las estructuras para guardar los cursos
+*/
+
 var diasR = ["lu", "ma", "mi", "ju", "vi", "sa", "dom"];
 
 //Objeto curso
@@ -19,61 +23,67 @@ function Curso(id, cod, name, seccion, edificio, salon, inicio, fin, lu, ma, mi,
     this.dom = dom;
 }
 
-//Lista
+//Objeto nodo Lista
 function nLista() {
     this.dato = this.ant = this.sig = undefined;
 }
 
+//Obejeto Lista
 function Lista() {
     this.primero = this.ultimo = undefined;
     this.size = 0;
 }
 
+//Objeto Lista horario. Una lista que guarda un array, en la posicion 0 es curso, 1 booleano
+function ListaHorario() {
+    this.cursoTraslape = undefined;
+    Lista.call(this);
+}
+
+//Constructores de Lista horario
+ListaHorario.prototype = Object.create(Lista.prototype);
+ListaHorario.prototype.constructor = ListaHorario;
+
+//Objeto Lista horario ordenado. Es una lista ordenada por horario
+function ltshOrdenado() {
+    Lista.call(this);
+}
+
+//Constructores de Lista horario ordenado
+ltshOrdenado.prototype = Object.create(Lista.prototype);
+ltshOrdenado.prototype.constructor = ltshOrdenado;
+
+/********************** Funciones de Objetos creados **********************/
+
+//Funcion de Lista. Indica si la lista esta vacia
 Lista.prototype.vacia = function() {
-    if (this.ultimo === undefined) {
+    if (this.ultimo === undefined){
         return true;
     } else {
         return false;
     }
 };
 
-//Lista horario
-function ListaHorario() {
-    this.cursoTraslape = undefined;
-    Lista.call(this);
-}
-
-ListaHorario.prototype = Object.create(Lista.prototype);
-ListaHorario.prototype.constructor = ListaHorario;
-
-//Lista horario ordenado
-function ltshOrdenado() {
-    Lista.call(this);
-}
-
-ltshOrdenado.prototype = Object.create(Lista.prototype);
-ltshOrdenado.prototype.constructor = ltshOrdenado;
-
-/************* Funciones de Objetos creados **************/
-
+//Funcion de Lista Horario. Agrega curso verificando si es posible agregar
 ListaHorario.prototype.addCursoHorario = function(dato) {
     if (this.find(dato[0].id) === undefined) { //Existe curso
         if (dato[1] === true) { //Definitivo
             if (this.existeTraslape(dato[0]) === false) {
                 this.add(dato);
-                return 0;
+                return 0;   //Curso agregado
             } else {
-                return 2;
+                return 2;   //Curso que genera traslape
             }
         } else {
             this.add(dato);
-            return 0;
+            return 0;       //Curso agregado
         }
     } else {
-        return 1;
+        return 1;           //Ya se agregado el curso
     }
 };
 
+//Funcion de Lista Horario. Borra un nodo de la lista por el idCurso
 ListaHorario.prototype.delCursoHorario = function(idCurso) {    
     var aux = this.primero;
 
@@ -99,6 +109,7 @@ ListaHorario.prototype.delCursoHorario = function(idCurso) {
     }
 };
 
+//Funcion de Lista Horario. Agrega un nodo al final de la lista
 ListaHorario.prototype.add = function(dato) {
     var nuevo = new nLista();
     nuevo.dato = dato;
@@ -115,12 +126,13 @@ ListaHorario.prototype.add = function(dato) {
     this.size++;
 };
 
-ListaHorario.prototype.find = function(id_curso) {
+//Funcion de Lista Horario. Encuentra un curso por idcurso
+ListaHorario.prototype.find = function(idCurso) {
     var aux = this.primero;
 
     while (aux !== undefined) {
         var curso = aux.dato[0];
-        if (curso.id === id_curso) {
+        if (curso.id === idCurso) {
             return aux.dato;
         }
         aux = aux.sig;
@@ -129,6 +141,7 @@ ListaHorario.prototype.find = function(id_curso) {
     return undefined;
 };
 
+//Funcion de Lista Horario. Verifica si el curso ha agregar genera traslape con los cursos agredos
 ListaHorario.prototype.existeTraslape = function(curso) {
     var aux = this.primero;
 
@@ -152,6 +165,7 @@ ListaHorario.prototype.existeTraslape = function(curso) {
     return false;
 };
 
+//Funcion de Lista Horario Ordenado. Agregar curso ordenado por horario
 ltshOrdenado.prototype.agregar = function(curso) {
     if (this.vacia() === true) {
         var nuevo = new nLista();

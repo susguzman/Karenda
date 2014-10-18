@@ -1,9 +1,10 @@
 var dias = ["Hora", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
 var colores = ["Blue", "Red", "Green", "Orange", "Purple", "Yellow", "Gray", "Olive", "Aqua", "PowderBlue", "Brown", "White", "Crimson", "Chocolate", "Tan", "Teal"];
 
+//Funcion que grafica el horario
 function graficar(margen) {
     var filWidth = 60;
-    var orderHorario = crearListaHorario();
+    var orderHorario = crearLtsOrdenado();
     var filas = orderHorario.size;
 
     var escenario = new Kinetic.Stage({
@@ -163,7 +164,8 @@ function graficar(margen) {
     //$("#mi canvas").removeAttr('style');
 }
 
-function crearListaHorario() {
+//Crea una lista de cursos hordenados por horario
+function crearLtsOrdenado() {
     var l = new ltshOrdenado();
 
     var aux = ltsHorario.primero;

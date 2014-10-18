@@ -1,12 +1,18 @@
+/* 
+ * Archivo donde se maneja el DOM 
+ */
+
 var arrCursos = [];
 var ltsHorario = new ListaHorario();
 var selCurso = undefined;
 var askAgregar = true;
 
+//Funcion que agrega un curso al array general de cursos
 function addCurso(cod, name, seccion, edificio, salon, inicio, fin, lu, ma, mi, ju, vi, sa, dom) {
     return arrCursos.push(new Curso(arrCursos.length, cod, name, seccion, edificio, salon, inicio, fin, lu, ma, mi, ju, vi, sa, dom));
 }
 
+//Funcion que obtiene un curso por el ID del array general de cursos
 function getCurso(id) {
     if (arrCursos[id] !== undefined) {
         return arrCursos[id];
@@ -15,23 +21,145 @@ function getCurso(id) {
     }
 }
 
-//Agregar Cursos prueba
-/*for (i = 1; i <= 5; i++) {
- addCurso("07" + i, "Curso" + i, "A", "T3", "105", 700, 800, false, true, false, true, false, false, false);
- }
- addCurso("076", "Curso6", "A", "T3", "105", 630, 730, false, true, false, true, false, false, false);
- addCurso("077", "Curso7", "A", "T3", "105", 800, 900, false, true, false, true, false, false, false);
- addCurso("078", "Curso8", "A", "T3", "105", 730, 800, true, false, false, false, false, false, false);
- addCurso("079", "Curso9", "A", "T3", "105", 700, 800, false, false, true, false, true, false, false);*/
+//Retorna una X o - dependiento del valor booleano
+function boolToX(valor) {
+    if (valor === true) {
+        return "x";
+    } else {
+        return "-";
+    }
+}
 
-//Al estar listo el documento
-$(document).ready(function () {
+//Muestra el Mensaje Generico Creado
+function showMsg(p_modal, titulo, texto, botones) {
+    $("#msg_texto").text(texto);
+    $("#mensaje").dialog("option", "modal", p_modal);
+    $("#mensaje").dialog("option", "title", titulo);
+    $("#mensaje").dialog("option", "buttons", botones);
+    $("#mensaje").dialog("open");
+}
 
-    //Agregando Cursos a Tabla Lista
+//Agrega un curso como Normal
+function addNormal(curso) {
+    switch (ltsHorario.addCursoHorario([curso, true])) {
+        case 0: //Agregado Correctamente
+            //Agregar posilidad de eliminar curso de la lista
+            var del = $("<a></a>").click(
+                    function(event) {
+                        var idCurso = parseInt($(this).parent().attr("id").replace("lc", ""));
+                        ltsHorario.delCursoHorario(idCurso);
+                        $(this).parent().remove();
+                    }).attr("href", "#");
+
+            $("<img>").attr("src", "images/delete.png").attr("width", "13").attr("height", "13").appendTo(del);
+            del.appendTo($("<li></li>").text(curso.name + " ").attr("id", "lc" + curso.id).appendTo($("#lista_def")));
+
+            $("#lista_def").find(".placeholder").remove();
+            console.log("Curso Agregado.");
+            break;
+        case 1: //Curso ya agregado
+            showMsg(true, "Error ...", "Curso ya agregado.", [{text: "Ok", click: function() {
+                        $(this).dialog("close");
+                    }}]);
+            console.log("Ya se ha agregado el curso.");
+            break;
+        case 2: //Curso con traslape
+            var botones = undefined;
+            if (askAgregar === true) {
+                botones = [
+                    {
+                        text: "Ok",
+                        click: function() {
+                            $(this).dialog("close");
+                        }
+                    },
+                    {
+                        text: "como Posible",
+                        click: function() {
+                            $(this).dialog("close");
+                            addPosible(curso);
+                        }
+                    }];
+            } else {
+                botones = [
+                    {
+                        text: "Ok",
+                        click: function() {
+                            $(this).dialog("close");
+                        }
+                    }];
+            }
+
+            showMsg(true, "Traslape ...", "Exite un traslape", botones);
+            console.log("Existe traslape de curso.");
+            break;
+        default: //No se pudo agregar el curso
+            showMsg(true, "Error ...", "No se pudo agregar.", [{text: "Ok", click: function() {
+                        $(this).dialog("close");
+                    }}]);
+            console.log("Error al agregar.");
+    }
+}
+
+//Agregar un curso como Posible
+function addPosible(curso) {
+    $("#lista_pos").find(".placeholder").remove();
+    $("<li></li>").text(curso.name).appendTo($("#lista_pos"));
+    ltsHorario.addCursoHorario([curso, false]);
+}
+
+function addCursoUI(curso) {
+    selCurso = curso;
+    if (curso !== undefined) {
+        if (ltsHorario.find(curso.id) === undefined) {
+            if (askAgregar === true) {
+                showMsg(true, "Agergar Curso ...", "Como desea agergar el curso?", [
+                    {
+                        text: "Normal",
+                        click: function() {
+                            $(this).dialog("close");
+                            addNormal(curso);
+                        }
+                    },
+                    {
+                        text: "Posible",
+                        click: function() {
+                            $(this).dialog("close");
+                            addPosible(curso);
+                        }
+                    }]);
+            } else {
+                addNormal(curso);
+            }
+        } else {
+            showMsg(true, "Error ...", "Curso ya agregado.", [{text: "Ok", click: function() {
+                        $(this).dialog("close");
+                    }}]);
+        }
+    } else {
+        showMsg(true, "Error ...", "No encontrado.", [{text: "Ok", click: function() {
+                    $(this).dialog("close");
+                }}]);
+    }
+}
+
+//Funcion que comienza al estar listo el documento
+$(document).ready(function() {
+
+    //Recorre el array de cursos; agrega los cursos al html
     for (i = 0; i < arrCursos.length; i++) {
         var curso = arrCursos[i];
         var fila = $("<tr></tr>").attr("id", i).addClass("drag_curso");
 
+        var add = $("<a></a>").click(
+                function(event) {
+                    addCursoUI(getCurso(parseInt($(this).parent().parent().attr("id"))));
+                    console.log(curso);
+                }).attr("href", "#").text("A");
+
+        //$("<img>").attr("src", "images/delete.png").attr("width", "13").attr("height", "13").appendTo(add);
+
+        add.appendTo($("<td></td>").appendTo($(fila)));
         $("<td></td>").text(curso.cod).appendTo($(fila));
         $("<td></td>").text(curso.name).appendTo($(fila));
         $("<td></td>").text(curso.seccion).appendTo($(fila));
@@ -49,15 +177,7 @@ $(document).ready(function () {
         fila.appendTo($("#tablaCursos"));
     }
 
-    function boolToX(valor) {
-        if (valor === true) {
-            return "x";
-        } else {
-            return "-";
-        }
-    }
-
-    //Ventana Horario
+    //Ventana horario. jqueryui
     $("#horario").dialog({
         autoOpen: true,
         draggable: true,
@@ -69,9 +189,13 @@ $(document).ready(function () {
         dialogClass: "mi_horario",
         buttons: [{
                 text: "Ver",
-                click: function () {
+                click: function() {
                     graficar(50);
                     $("#msgHorario").dialog("open");
+                }}, {
+                text: "Opciones",
+                click: function() {
+                    //
                 }}]
     }).dialogExtend({
         closable: false,
@@ -82,7 +206,7 @@ $(document).ready(function () {
     });
     $("#horario").dialog("option", "position", {my: "right-3% bottom-5%", at: "right bottom", of: window});
 
-    //Ventana canvas horario
+    //Ventana canvas horario. Vista malla. jqueryui
     $("#msgHorario").dialog({
         modal: true,
         autoOpen: false,
@@ -93,7 +217,7 @@ $(document).ready(function () {
         dialogClass: "pr",
         buttons: [{
                 text: "Descargar",
-                click: function () {
+                click: function() {
                     window.open($(".kineticjs-content canvas")[0].toDataURL());
                 }}]
     }).dialogExtend({
@@ -102,7 +226,7 @@ $(document).ready(function () {
         minimizeLocation: "right"
     });
 
-    //Ventana Mensaje
+    //Ventana Generica de un mensaje Mensaje. jquetyui
     $("#mensaje").dialog({
         autoOpen: false,
         draggable: false,
@@ -111,135 +235,41 @@ $(document).ready(function () {
         width: 300
     });
 
-    //Drag Horario definitivo
+    //Activa Drag a la clase drag_cruso (elmentos de tabla) 
     $(".drag_curso").draggable({
         /*appendTo: "body",*/
         helper: "clone",
         cursor: "move",
-        opacity: 0.5,
+        //opacity: 0.5,
         cursorAt: {left: 5}
     });
 
-    //Mostrar Mensaje
-    function showMsg(p_modal, titulo, texto, botones) {
-        $("#msg_texto").text(texto);
-        $("#mensaje").dialog("option", "modal", p_modal);
-        $("#mensaje").dialog("option", "title", titulo);
-        $("#mensaje").dialog("option", "buttons", botones);
-        $("#mensaje").dialog("open");
-    }
-
-    //Agregar Normal
-    function addNormal(curso) {
-        switch (ltsHorario.addCursoHorario([curso, true])) {
-            case 0:
-                $("#lista_def").find(".placeholder").remove();
-                var del = $("<a></a>").click(
-                    function (event) {
-                        var idCurso = parseInt($(this).parent().attr("id").replace("lc",""));
-                        ltsHorario.delCursoHorario(idCurso);                        
-                        $(this).parent().remove();
-                    }).attr("href", "#");
-                
-                $("<img>").attr("src", "images/delete.png").attr("width", "13").attr("height", "13").appendTo(del);
-                del.appendTo($("<li></li>").text(curso.name + " ").attr("id", "lc" + curso.id).appendTo($("#lista_def")));
-
-                console.log("Curso Agregado.");
-                break;
-            case 1:
-                showMsg(true, "Error ...", "Curso ya agregado.", [{text: "Ok", click: function () {
-                            $(this).dialog("close");
-                        }}]);
-                console.log("Ya se ha agregado el curso.");
-                break;
-            case 2:
-                showMsg(true, "Traslape ...", "Exite un traslape", [
-                    {
-                        text: "Ok",
-                        click: function () {
-                            $(this).dialog("close");
-                        }
-                    },
-                    {
-                        text: "como Posible",
-                        click: function () {
-                            $(this).dialog("close");
-                            addPosible(curso);
-                        }
-                    }]);
-                console.log("Existe traslape de curso.");
-                break;
-            default:
-                showMsg(true, "Error ...", "No se pudo agregar.", [{text: "Ok", click: function () {
-                            $(this).dialog("close");
-                        }}]);
-                console.log("Error al agregar.");
-        }
-    }
-
-    //Agregar Posible
-    function addPosible(curso) {
-        $("#lista_pos").find(".placeholder").remove();
-        $("<li></li>").text(curso.name).appendTo($("#lista_pos"));
-        ltsHorario.addCursoHorario([curso, false]);
-    }
-
-    /*Drop sobre horario*/
+    //Activa Drop para arrastrar cursos
     $("#horario").droppable({
         activeClass: "ui-state-default",
         hoverClass: "ui-state-hover",
         accept: ":not(.ui-sortable-helper)",
-        drop: function (event, ui) {
-            selCurso = getCurso(ui.draggable.attr("id"));
-
-            if (selCurso !== undefined) {
-                if (ltsHorario.find(selCurso.id) === undefined) {
-                    if (askAgregar === true) {
-                        showMsg(true, "Agergar Curso ...", "Como desea agergar el curso?", [
-                            {
-                                text: "Normal",
-                                click: function () {
-                                    $(this).dialog("close");
-                                    addNormal(selCurso);
-                                }
-                            },
-                            {
-                                text: "Posible",
-                                click: function () {
-                                    $(this).dialog("close");
-                                    addPosible(selCurso);
-                                }
-                            }]);
-                    } else {
-                        addNormal(selCurso);
-                    }
-                } else {
-                    showMsg(true, "Error ...", "Curso ya agregado.", [{text: "Ok", click: function () {
-                                $(this).dialog("close");
-                            }}]);
-                }
-            } else {
-                showMsg(true, "Error ...", "No encontrado.", [{text: "Ok", click: function () {
-                            $(this).dialog("close");
-                        }}]);
-            }
+        drop: function(event, ui) {
+            addCursoUI(getCurso(ui.draggable.attr("id"))); //obtiene curso por id del array general
         }
     });
 
+    //Activa posiblidad de mover los cursos agregados
     $("#lista_def").sortable({
         items: "li:not(.placeholder)",
         cursor: "move",
         opacity: 0.5,
-        sort: function (event, ui) {
+        sort: function(event, ui) {
             $(this).removeClass("ui-state-default");
         }
     });
 
+    //Activa posiblidad de mover los cursos agregados posibles 
     $("#lista_pos").sortable({
         items: "li:not(.placeholder)",
         cursor: "move",
         opacity: 0.5,
-        sort: function (event, ui) {
+        sort: function(event, ui) {
             $(this).removeClass("ui-state-default");
         }
     });

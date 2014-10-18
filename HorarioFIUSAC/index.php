@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
     <head>
-        <title>Horario Interactivo Git2</title>
+        <title>Horario Interactivo</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href="css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
@@ -78,6 +78,8 @@
                 margin: 0px 0px 0px 10px;
             }
         </style>
+        
+        <!-- Cargar lista de cursos de DB, los agrega al array general de curos  -->
         <?php
         $con = mysqli_connect("localhost", "jguzman", "falcon20", "horario");
 
@@ -86,6 +88,7 @@
             die("Failed to connect to MySQL" . mysqli_connect_error());
         }
 
+        //Funcion que retorna el texto true o false 
         function toBool($dato) {
             if ($dato == "1") {
                 return "true";
@@ -96,6 +99,7 @@
 
         $result = mysqli_query($con, "SELECT * FROM curso");
 
+        //Imprimir codigo java scrip para agregar cursos
         echo "<script type=\"text/javascript\">\n";
         while ($row = mysqli_fetch_array($result)) {
             echo "addCurso(\"" . $row['cod'] . "\", \"" . $row['nombre'] . "\", \"" . $row['seccion'] . "\", \"" . $row['edificio'] . "\", \"" . $row['salon'] . "\", " . $row['inicio'] . ", " . $row['final'] . ", " . toBool($row['lu']) . ", " . toBool($row['ma']) . ", " . toBool($row['mi']) . ", " . toBool($row['ju']) . ", " . toBool($row['vi']) . ", " . toBool($row['sa']) . ", " . toBool($row['dom']) . ");\n";
@@ -132,20 +136,21 @@
             <div class="bodycontent">	
                 <table id = "tablaCursos">
                     <tr>
-                        <th style="width:7%">Cod</th>
+                        <th style="width:3%"></th>
+                        <th style="width:5%">Cod</th>
                         <th>Nombre</th> 
-                        <th style="width:7%">Sec</th>
-                        <th style="width:7%">Edificio</th>
-                        <th style="width:7%">Salon</th>
-                        <th style="width:7%">Inicio</th>
-                        <th style="width:7%">Fin</th>
-                        <th style="width:3%">L</th>
-                        <th style="width:3%">M</th>
-                        <th style="width:3%">M</th>
-                        <th style="width:3%">J</th>
-                        <th style="width:3%">V</th>
-                        <th style="width:3%">S</th>
-                        <th style="width:3%">D</th>
+                        <th style="width:5%">Sec</th>
+                        <th style="width:6%">Edificio</th>
+                        <th style="width:5%">Salon</th>
+                        <th style="width:5%">Inicio</th>
+                        <th style="width:5%">Fin</th>
+                        <th style="width:2%">L</th>
+                        <th style="width:2%">M</th>
+                        <th style="width:2%">M</th>
+                        <th style="width:2%">J</th>
+                        <th style="width:2%">V</th>
+                        <th style="width:2%">S</th>
+                        <th style="width:2%">D</th>
                     </tr>                    
                 </table>
 

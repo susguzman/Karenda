@@ -29,8 +29,6 @@
             }
 
             .mi_horario .ui-widget-header{
-                /*border: 0px;
-                border-bottom: 2em;*/
                 border-style: none;
                 background: gray;
             }
@@ -53,7 +51,7 @@
                 font-size: 1em;                
             }
 
-            #lista_def, #lista_pos{
+            #lista_def, #lista_pos, #msgOpciones div{
                 font-size: 0.9em;
                 font-style: italic;
             }
@@ -66,11 +64,11 @@
                 color: #999;
             }
 
-            #horario div{
+            #horario div, #msgOpciones div{
                 margin: 10px 10px 15px 10px;
             }
 
-            #horario ol{
+            #horario ol, #msgOpciones input{
                 margin: 5px 0px 0px 50px;
             }
             
@@ -154,14 +152,14 @@
                     </tr>                    
                 </table>
 
-                <div id="horario">
-                    <div>
+                <div id="horario" class="msg">
+                    <div id="blockDef">
                         <h4>Cursos Definitivos</h4>
                         <ol id = "lista_def">
                             <li class="placeholder">Agrega tus cursos</li>
                         </ol>
                     </div>
-                    <div>
+                    <div id="blockPos">
                         <h4>Cursos Posibles</h4>
                         <ol id = "lista_pos">
                             <li class="placeholder">Posibles cursos</li>
@@ -169,14 +167,26 @@
                     </div>
                 </div>
 
-                <div id="mensaje">
+                <div id="msgGenerico" class="msg">
                     <p style="margin: 10px 0px;"><i id = "msg_texto"></i></p>
                 </div>
+                
+                <div id="msgOpciones" class="msg">
+                    <div>
+                        <h4>Comportamiento</h4>
+                        <input type="checkbox" id="ckDrag" value="Bike" checked="true">Arrastrar cursos<br>
+                        <input type="checkbox" id="ckPosible" value="Car" checked="true">Agregar como posible
+                    </div>
+                    <div>
+                        <h4>Plantilla</h4>
+                        <input type="radio" id="cuadro" name="template" value="male" checked="true">Cuadricula
+                        <input type="radio" id="linea" name="template" value="female">Lineal
+                    </div>                    
+                </div>
 
-                <div id="msgHorario">
+                <div id="msgImgHorario" class="msg">
                     <div id = "canvasHorario"></div>
                 </div>
-                <div class="columna"></div>
             </div>
             <div id="footer">
                 Abajo XD

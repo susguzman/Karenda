@@ -33,10 +33,10 @@ function boolToX(valor) {
 //Muestra el Mensaje Generico Creado
 function showMsg(p_modal, titulo, texto, botones) {
     $("#msg_texto").text(texto);
-    $("#mensaje").dialog("option", "modal", p_modal);
-    $("#mensaje").dialog("option", "title", titulo);
-    $("#mensaje").dialog("option", "buttons", botones);
-    $("#mensaje").dialog("open");
+    $("#msgGenerico").dialog("option", "modal", p_modal);
+    $("#msgGenerico").dialog("option", "title", titulo);
+    $("#msgGenerico").dialog("option", "buttons", botones);
+    $("#msgGenerico").dialog("open");
 }
 
 //Agrega un curso como Normal
@@ -108,6 +108,7 @@ function addPosible(curso) {
     ltsHorario.addCursoHorario([curso, false]);
 }
 
+//Ventana de Agregar curso
 function addCursoUI(curso) {
     selCurso = curso;
     if (curso !== undefined) {
@@ -140,6 +141,23 @@ function addCursoUI(curso) {
         showMsg(true, "Error ...", "No encontrado.", [{text: "Ok", click: function() {
                     $(this).dialog("close");
                 }}]);
+    }
+}
+
+function dragCursos(val){
+    if(val === true){
+        $(".drag_curso").draggable( 'disable' );
+    }else{
+        $(".drag_curso").draggable( 'enable' );
+    }
+}
+
+function cursosPosibles(val){
+    askAgregar = val;
+    if(val === true){
+        $("#blockPos").show();
+    }else{
+        $("#blockPos").hide();
     }
 }
 
@@ -177,6 +195,9 @@ $(document).ready(function() {
         fila.appendTo($("#tablaCursos"));
     }
 
+    //Para todas las ventanas
+    //$(".msg").param();
+
     //Ventana horario. jqueryui
     $("#horario").dialog({
         autoOpen: true,
@@ -191,11 +212,11 @@ $(document).ready(function() {
                 text: "Ver",
                 click: function() {
                     graficar(50);
-                    $("#msgHorario").dialog("open");
+                    $("#msgImgHorario").dialog("open");
                 }}, {
                 text: "Opciones",
                 click: function() {
-                    //
+                    $("#msgOpciones").dialog("open");
                 }}]
     }).dialogExtend({
         closable: false,
@@ -207,7 +228,7 @@ $(document).ready(function() {
     $("#horario").dialog("option", "position", {my: "right-3% bottom-5%", at: "right bottom", of: window});
 
     //Ventana canvas horario. Vista malla. jqueryui
-    $("#msgHorario").dialog({
+    $("#msgImgHorario").dialog({
         modal: true,
         autoOpen: false,
         draggable: false,
@@ -227,12 +248,42 @@ $(document).ready(function() {
     });
 
     //Ventana Generica de un mensaje Mensaje. jquetyui
-    $("#mensaje").dialog({
+    $("#msgGenerico").dialog({
         autoOpen: false,
         draggable: false,
         resizable: false,
         height: 200,
-        width: 300
+        width: 300,
+        dialogClass: "mi_horario"
+    });
+    
+    //Ventana Opciones. jquetyui
+    $("#msgOpciones").dialog({
+        autoOpen: false,
+        draggable: false,
+        resizable: false,
+        modal: true,
+        height: 200,
+        width: 400,
+        title: "Opciones",
+        dialogClass: "mi_horario"
+    });
+    
+    //Activar checkbox
+    $("#ckDrag").click(function() {
+        if($("#ckPosible").is(':checked')) {  
+            dragCursos(true);
+        } else {  
+            dragCursos(false);
+        }
+    });
+    
+    $("#ckPosible").click(function() {
+        if($("#ckPosible").is(':checked')) {  
+            cursosPosibles(true);
+        } else {  
+            cursosPosibles(false);
+        }
     });
 
     //Activa Drag a la clase drag_cruso (elmentos de tabla) 
@@ -244,7 +295,7 @@ $(document).ready(function() {
         cursorAt: {left: 5}
     });
 
-    //Activa Drop para arrastrar cursos
+    //Activa Drop para soltar cursos
     $("#horario").droppable({
         activeClass: "ui-state-default",
         hoverClass: "ui-state-hover",

@@ -161,6 +161,10 @@ function cursosPosibles(val){
     }
 }
 
+function getTemplate(){
+    return parseInt($("input[name=template]:checked").val());
+}
+
 //Funcion que comienza al estar listo el documento
 $(document).ready(function() {
 
@@ -210,8 +214,9 @@ $(document).ready(function() {
         dialogClass: "mi_horario",
         buttons: [{
                 text: "Ver",
-                click: function() {
-                    graficar(50);
+                click: function() {                    
+                    //graficar(50);
+                    graficar(getTemplate());
                     $("#msgImgHorario").dialog("open");
                 }}, {
                 text: "Opciones",

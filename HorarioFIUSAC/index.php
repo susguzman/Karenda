@@ -179,8 +179,8 @@
                     </div>
                     <div>
                         <h4>Plantilla</h4>
-                        <input type="radio" id="cuadro" name="template" value="male" checked="true">Cuadricula
-                        <input type="radio" id="linea" name="template" value="female">Lineal
+                        <input type="radio" id="cuadro" name="template" value="0" checked="true">Cuadricula
+                        <input type="radio" id="linea" name="template" value="1">Lineal
                     </div>                    
                 </div>
 
